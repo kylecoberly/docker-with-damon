@@ -1,0 +1,25 @@
+version: "3"
+services:
+  web:
+    image: node:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./client:/app"
+    working_dir: "/app"
+    command: bash -c "npm i -g http-server && http-server"
+  api:
+    image: node:latest
+    ports:
+      - "4000:4000"
+    env_file: ./server/.env
+    volumes:
+      - "./server:/app"
+    working_dir: "/app"
+    command: bash -c "npm i && npm run dev"
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./postgres-data:/var/lib/postgresql/data"

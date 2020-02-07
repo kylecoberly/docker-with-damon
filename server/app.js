@@ -1,19 +1,20 @@
 const express = require("express")
 const cors = require("cors")
 const morgan = require("morgan")
+const knex = require("knex")
 const app = express()
 
+const config = require("./knexfile")["development"]
+const database = knex(config)
+morgan("small")
+
 app.use(cors())
-app.use(morgan("small"))
 
 app.get("/items", (request, response) => {
-  response.json({
-    items: [{
-      label: "Thing 1",
-    },{
-      label: "Thing 2",
-    }]
-  })
+  database("item").select()
+    .then(items => {
+      response.json({ items })
+    })
 })
 
 app.listen(process.env.PORT, () => console.log("Hi!"))
